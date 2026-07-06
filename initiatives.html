@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Initiatives — Pallston</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    #container { width: 100%; min-height: 100vh; }
+    .project-content { display: none; }
+    .project-content.active { display: block; }
+    .loading { text-align: center; padding: 40px; font-size: 18px; color: #666; }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div class="loading">Loading project...</div>
+  </div>
+
+  <script>
+    const projectMap = {
+      'careoneconcept': '/projects/CareOne_dc.html',
+      'execboardconcept': '/projects/ExecBoard_dc.html',
+      'geoshieldconcept': '/projects/GeoShield_dc.html'
+    };
+
+    async function loadProject(projectKey) {
+      const container = document.getElementById('container');
+      const filePath = projectMap[projectKey];
+      
+      if (!filePath) {
+        container.innerHTML = '<div style="padding: 40px; text-align: center;"><h2>Project not found</h2><p>Available projects: careoneconcept, execboardconcept, geoshieldconcept</p></div>';
+        return;
+      }
+
+      try {
+        const response = await fetch(filePath);
+        if (!response.ok) throw new Error('Failed to load');
+        const html = await response.text();
+        
+        // Extract the body content (everything between <body> and </body>)
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const bodyContent = doc.body.innerHTML;
+        
+        container.innerHTML = bodyContent;
+        
+        // Re-execute any scripts that were in the original HTML
+        const scripts = doc.querySelectorAll('body script');
+        scripts.forEach(script => {
+          const newScript = document.createElement('script');
+          if (script.src) {
+            newScript.src = script.src;
+          } else {
+            newScript.textContent = script.textContent;
+          }
+          document.body.appendChild(newScript);
+        });
+
+        // Also load any stylesheets from head
+        const links = doc.querySelectorAll('head link[rel="stylesheet"]');
+        links.forEach(link => {
+          const newLink = document.createElement('link');
+          newLink.rel = 'stylesheet';
+          newLink.href = link.href;
+          document.head.appendChild(newLink);
+        });
+
+      } catch (error) {
+        container.innerHTML = `<div style="padding: 40px; text-align: center; color: #d32f2f;"><h2>Error loading project</h2><p>${error.message}</p></div>`;
+        console.error('Load error:', error);
+      }
+    }
+
+    // Detect hash and load appropriate project
+    function handleHashChange() {
+      const hash = window.location.hash.substring(1) || 'careoneconcept';
+      loadProject(hash);
+    }
+
+    // Load on initial page load
+    handleHashChange();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+  </script>
+</body>
+</html>

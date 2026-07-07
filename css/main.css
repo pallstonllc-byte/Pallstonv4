@@ -844,3 +844,15 @@ form.contact-form { display: flex; flex-direction: column; gap: var(--sp-5); }
   .js .field .fn { opacity: 1; }
   .js [data-rv] { opacity: 1; transform: none; }
 }
+/* Debug: disable all transitions on chapter grid */
+.chapter__grid {
+  transition: none !important;
+}
+
+.chapter__field {
+  transition: none !important;
+}
+
+.chapter {
+  transition: none !important;
+}

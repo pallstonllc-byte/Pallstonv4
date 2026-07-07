@@ -856,3 +856,18 @@ form.contact-form { display: flex; flex-direction: column; gap: var(--sp-5); }
 .chapter {
   transition: none !important;
 }
+/* Test: disable SVG animation */
+.js .field path {
+  stroke-dasharray: none !important;
+  stroke-dashoffset: 0 !important;
+  transition: none !important;
+}
+
+.js .field.is-drawn path {
+  stroke-dashoffset: 0;
+}
+
+.js .field .fn {
+  opacity: 1 !important;
+  transition: none !important;
+}

@@ -1,30 +1,28 @@
+# Netlify Configuration
 [build]
+  # No build command needed - static site
+  command = ""
   publish = "."
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-
-[[headers]]
-  for = "/css/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/js/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
+# Ensure all HTML files in projects folder are deployed
 [[redirects]]
-  from = "/*"
-  to = "/404.html"
-  status = 404
+  from = "/projects/*"
+  to = "/projects/:splat"
+  status = 200
+
+# Support for anchor links (hash routing)
+[[redirects]]
+  from = "/initiatives"
+  to = "/initiatives.html"
+  status = 200
+
+# Cache control
+[[headers]]
+  for = "/**"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/projects/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

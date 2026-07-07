@@ -116,8 +116,16 @@ a.text-link:hover { text-decoration-color: var(--emerald); }
 .cta-row { display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: center; }
 
 /* ---------- Decision Fields ---------- */
-.field { width: 100%; height: auto; overflow: visible; }
+.field { 
+  width: 100%; 
+  height: auto; 
+  overflow: visible;
+  contain: layout style paint;
+}
 
+.field path {
+  will-change: stroke-dashoffset;
+}
 .field .fl {
   fill: none;
   stroke: var(--field-line);
